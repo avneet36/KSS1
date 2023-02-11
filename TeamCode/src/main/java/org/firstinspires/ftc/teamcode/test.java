@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 @TeleOp
-public class finalTeleOp extends LinearOpMode {
+public class test extends LinearOpMode {
     //drive
     private DcMotorEx motorFrontLeft = null;
     private DcMotorEx motorBackLeft = null;
@@ -36,7 +36,7 @@ public class finalTeleOp extends LinearOpMode {
     //variables
     //double slideMotorPower = 0.50;
     int maxSlideEncoderTicks = 3980;
-    double slideVelocity = 1000;
+    double slideVelocity = 800;
     double chassisSpeed = 0.42;
 
     //boolean Override = true;
@@ -76,7 +76,6 @@ public class finalTeleOp extends LinearOpMode {
 
 
 
-
         //Direction
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -84,7 +83,6 @@ public class finalTeleOp extends LinearOpMode {
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         slide1.setDirection(DcMotorEx.Direction.REVERSE);
         slide2.setDirection(DcMotorEx.Direction.FORWARD);
-
 
 
         slideLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
@@ -95,8 +93,6 @@ public class finalTeleOp extends LinearOpMode {
 
 
         waitForStart();
-
-
 
         claw.setPosition(0.7);
 
@@ -110,8 +106,8 @@ public class finalTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            mechanumDrive();
-            claw();
+            //mechanumDrive();
+            //claw();
             limitSwitch();
 
 
@@ -149,7 +145,7 @@ public class finalTeleOp extends LinearOpMode {
                 slideAuto();
             }
             else if (!manualAuto){
-                slideManual();
+                //slideManual();
             }
 
             if ((gamepad1.left_bumper) && (manualAuto) && (timeSinceToggleSlide.milliseconds() > 300)) {
@@ -288,7 +284,7 @@ public class finalTeleOp extends LinearOpMode {
         slide1.setTargetPosition(targetPosition);
         slide2.setTargetPosition(targetPosition);
         slide1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        slide2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        slide1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         slide1.setVelocity(slideVelocity);
         slide2.setVelocity(slideVelocity);
 
