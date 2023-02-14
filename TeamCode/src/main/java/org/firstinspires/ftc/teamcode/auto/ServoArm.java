@@ -10,7 +10,7 @@ public class ServoArm {
     public static double POS_OFFSET = 0.27;
 
     private Servo servo;
-x
+
     public ServoArm(HardwareMap hardwareMap) {
         this.servo = hardwareMap.get(Servo.class, "servo");
     }

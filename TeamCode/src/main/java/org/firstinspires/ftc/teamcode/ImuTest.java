@@ -130,25 +130,6 @@ public class ImuTest extends LinearOpMode {
             limitSwitch();
 
 
-            /*telemetry.addData("Slide1 Speed: ", slide1.getVelocity());
-            telemetry.addData("Slide2 Speed: ", slide2.getVelocity());
-            telemetry.addData("Claw Position: ", claw.getPosition());
-            telemetry.addData("Claw: ", clawOutput);
-            telemetry.addData("claw Toggle: ", clawBoolean);
-            telemetry.addData("Rotation Servo Position: ", rotation.getPosition());
-            telemetry.addData("Limit switch not pressed: ",  slideLimitSwitch.getState());
-            telemetry.addData("Target Position: ", targetPosition);
-            telemetry.addData("Slide1 Motor Current Ticks: ", slide1.getCurrentPosition());
-            telemetry.addData("Slide2 Motor Current Ticks: ", slide2.getCurrentPosition());
-            telemetry.addData("Slide Auto Toggle: ", manualAuto);
-            telemetry.addData("Chassis Speed", motorBackLeft.getPower());
-            telemetry.addData("BL ", motorBackLeft.getCurrentPosition());
-            telemetry.addData("FR", motorFrontRight.getCurrentPosition());
-            telemetry.addData("FL", motorFrontLeft.getCurrentPosition());
-            telemetry.addData("joystick x ", gamepad2.left_stick_x);
-            telemetry.addData("joystick y ", gamepad2.left_stick_y);
-
-             */
 
             telemetry.addData("Yaw", "Press Circle or B on Gamepad to reset.");
             // Check to see if reset yaw is requested.
