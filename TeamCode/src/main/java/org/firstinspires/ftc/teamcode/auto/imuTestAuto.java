@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,12 +13,23 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 //import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.IMU;
+import org.firstinspires.ftc.robotcore.external.JavaUtil;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
 
 import java.util.ArrayList;
 
-@Autonomous(name = "BLUEAutoDriveLeft ")
-public class autoDriveLeftBlue extends LinearOpMode {
+@Autonomous(name = "IMU Test Auto ")
+public class imuTestAuto extends LinearOpMode {
 
+    private IMU imu_IMU;
+    private BNO055IMU imu;
     private DcMotor motorBackLeft;
     private DcMotor motorBackRight;
     private DcMotor motorFrontRight;
@@ -41,6 +53,9 @@ public class autoDriveLeftBlue extends LinearOpMode {
     int fr;
 
     float yaw;
+    YawPitchRollAngles orientation;
+    AngularVelocity angularVelocity;
+
 
     //CAMERA
     OpenCvCamera camera;
@@ -91,6 +106,20 @@ public class autoDriveLeftBlue extends LinearOpMode {
         speed = 0.6;
         double slideMotorVelocity = 2800;
 
+        YawPitchRollAngles orientation;
+        AngularVelocity angularVelocity;
+
+        yaw = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYX, AngleUnit.DEGREES).thirdAngle;
+
+
+        imu_IMU = hardwareMap.get(IMU.class, "imu");
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+
+        imu_IMU.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
+        // Prompt user to press start button.
+        telemetry.addData("IMU Example", "Press start to continue...");
+        telemetry.update();
 
 
 
@@ -198,6 +227,18 @@ public class autoDriveLeftBlue extends LinearOpMode {
 
         if (opModeIsActive()) {
 
+            orientation = imu_IMU.getRobotYawPitchRollAngles();
+            angularVelocity = imu_IMU.getRobotAngularVelocity(AngleUnit.DEGREES);
+            // Display yaw, pitch, and roll.
+            telemetry.addData("Yaw (Z)", JavaUtil.formatNumber(orientation.getYaw(AngleUnit.DEGREES), 2));
+            telemetry.addData("Pitch (X)", JavaUtil.formatNumber(orientation.getPitch(AngleUnit.DEGREES), 2));
+            telemetry.addData("Roll (Y)", JavaUtil.formatNumber(orientation.getRoll(AngleUnit.DEGREES), 2));
+            // Display angular velocity.
+            telemetry.addData("Yaw (Z) velocity", JavaUtil.formatNumber(angularVelocity.zRotationRate, 2));
+            telemetry.addData("Pitch (X) velocity", JavaUtil.formatNumber(angularVelocity.xRotationRate, 2));
+            telemetry.addData("Roll (Y) velocity", JavaUtil.formatNumber(angularVelocity.yRotationRate, 2));
+            telemetry.update();
+
             //limitSwitch();
 
             if (tagOfInterest != null) {
@@ -281,7 +322,14 @@ public class autoDriveLeftBlue extends LinearOpMode {
 
     private void moveForward2(int encoder_Ticks) {
 
+        yaw = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYX, AngleUnit.DEGREES).thirdAngle;
+        if (yaw < -5) {
 
+        } else if (yaw > 5) {
+
+        } else {
+            motorBackLeft.setPower(speed);
+        }
 
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);

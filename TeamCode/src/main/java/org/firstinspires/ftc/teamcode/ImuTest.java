@@ -10,12 +10,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-//Tst for git
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.IMU;
+import org.firstinspires.ftc.robotcore.external.JavaUtil;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+
 
 
 @TeleOp
-public class finalTeleOp extends LinearOpMode {
+public class ImuTest extends LinearOpMode {
     //drive
+    private IMU imu_IMU;
     private DcMotorEx motorFrontLeft = null;
     private DcMotorEx motorBackLeft = null;
     private DcMotorEx motorFrontRight = null;
@@ -36,8 +43,8 @@ public class finalTeleOp extends LinearOpMode {
     //variables
     //double slideMotorPower = 0.50;
     int maxSlideEncoderTicks = 3980;
-    double slideVelocity = 4000;
-    double chassisSpeed = 0.5;
+    double slideVelocity = 1000;
+    double chassisSpeed = 0.42;
 
     //boolean Override = true;
     boolean clawBoolean = true;
@@ -74,7 +81,15 @@ public class finalTeleOp extends LinearOpMode {
 
         slideLimitSwitch = hardwareMap.get(DigitalChannel.class, "slideLimitSwitch");
 
+        YawPitchRollAngles orientation;
+        AngularVelocity angularVelocity;
 
+        imu_IMU = hardwareMap.get(IMU.class, "imu");
+
+        imu_IMU.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
+        // Prompt user to press start button.
+        telemetry.addData("IMU Example", "Press start to continue...");
+        telemetry.update();
 
 
         //Direction
@@ -115,7 +130,7 @@ public class finalTeleOp extends LinearOpMode {
             limitSwitch();
 
 
-            telemetry.addData("Slide1 Speed: ", slide1.getVelocity());
+            /*telemetry.addData("Slide1 Speed: ", slide1.getVelocity());
             telemetry.addData("Slide2 Speed: ", slide2.getVelocity());
             telemetry.addData("Claw Position: ", claw.getPosition());
             telemetry.addData("Claw: ", clawOutput);
@@ -133,8 +148,25 @@ public class finalTeleOp extends LinearOpMode {
             telemetry.addData("joystick x ", gamepad2.left_stick_x);
             telemetry.addData("joystick y ", gamepad2.left_stick_y);
 
+             */
 
+            telemetry.addData("Yaw", "Press Circle or B on Gamepad to reset.");
+            // Check to see if reset yaw is requested.
+            if (gamepad2.b) {
+                imu_IMU.resetYaw();
+            }
+            orientation = imu_IMU.getRobotYawPitchRollAngles();
+            angularVelocity = imu_IMU.getRobotAngularVelocity(AngleUnit.DEGREES);
+            // Display yaw, pitch, and roll.
+            telemetry.addData("Yaw (Z)", JavaUtil.formatNumber(orientation.getYaw(AngleUnit.DEGREES), 2));
+            telemetry.addData("Pitch (X)", JavaUtil.formatNumber(orientation.getPitch(AngleUnit.DEGREES), 2));
+            telemetry.addData("Roll (Y)", JavaUtil.formatNumber(orientation.getRoll(AngleUnit.DEGREES), 2));
+            // Display angular velocity.
+            telemetry.addData("Yaw (Z) velocity", JavaUtil.formatNumber(angularVelocity.zRotationRate, 2));
+            telemetry.addData("Pitch (X) velocity", JavaUtil.formatNumber(angularVelocity.xRotationRate, 2));
+            telemetry.addData("Roll (Y) velocity", JavaUtil.formatNumber(angularVelocity.yRotationRate, 2));
             telemetry.update();
+
 
             if ((slide1.getCurrentPosition() >= maxSlideEncoderTicks) || (slide2.getCurrentPosition() >= maxSlideEncoderTicks)){
                 slide1.setTargetPosition(3970);
@@ -386,9 +418,8 @@ public class finalTeleOp extends LinearOpMode {
             slide1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             slide2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             sleep(100);
-            targetPosition = 50;
-            slide1.setTargetPosition(targetPosition);
-            slide2.setTargetPosition(targetPosition);
+            slide1.setTargetPosition(150);
+            slide2.setTargetPosition(150);
             slide1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             slide2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             slide1.setVelocity(slideVelocity);
@@ -404,3 +435,5 @@ public class finalTeleOp extends LinearOpMode {
 
 
 }
+
+
