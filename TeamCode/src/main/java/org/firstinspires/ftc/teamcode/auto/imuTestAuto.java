@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,22 +12,24 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+//import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.IMU;
+import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-import java.util.Locale;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "BLUEAutoDriveLeft ")
-public class ImuAutoTest extends LinearOpMode {
+@Autonomous(name = "IMU Test Auto ")
+public class imuTestAuto extends LinearOpMode {
 
+    private IMU imu_IMU;
+    private BNO055IMU imu;
     private DcMotor motorBackLeft;
     private DcMotor motorBackRight;
     private DcMotor motorFrontRight;
@@ -51,6 +52,9 @@ public class ImuAutoTest extends LinearOpMode {
     int fl;
     int fr;
 
+    float yaw;
+    YawPitchRollAngles orientation;
+    AngularVelocity angularVelocity;
 
 
     //CAMERA
@@ -78,12 +82,6 @@ public class ImuAutoTest extends LinearOpMode {
 
     AprilTagDetection tagOfInterest = null;
 
-    // IMU
-    BNO055IMU imu;
-
-    // State used for updating telemetry
-    Orientation angles;
-    Acceleration gravity;
 
 
 
@@ -107,6 +105,22 @@ public class ImuAutoTest extends LinearOpMode {
         // Put initialization blocks here.
         speed = 0.6;
         double slideMotorVelocity = 2800;
+
+        YawPitchRollAngles orientation;
+        AngularVelocity angularVelocity;
+
+        yaw = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYX, AngleUnit.DEGREES).thirdAngle;
+
+
+        imu_IMU = hardwareMap.get(IMU.class, "imu");
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+
+        imu_IMU.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
+        // Prompt user to press start button.
+        telemetry.addData("IMU Example", "Press start to continue...");
+        telemetry.update();
+
 
 
         //slideMotor.setDirection(DcMotorEx.Direction.REVERSE);
@@ -203,34 +217,27 @@ public class ImuAutoTest extends LinearOpMode {
 
         /* Update the telemetry */
 
-        //IMU
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        imu.initialize(parameters);
-
-        // Set up our telemetry dashboard
-        composeTelemetry();
-
         waitForStart();
 
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
 
 
 
         //clawServo.setPosition(0);
 
         if (opModeIsActive()) {
+
+            orientation = imu_IMU.getRobotYawPitchRollAngles();
+            angularVelocity = imu_IMU.getRobotAngularVelocity(AngleUnit.DEGREES);
+            // Display yaw, pitch, and roll.
+            telemetry.addData("Yaw (Z)", JavaUtil.formatNumber(orientation.getYaw(AngleUnit.DEGREES), 2));
+            telemetry.addData("Pitch (X)", JavaUtil.formatNumber(orientation.getPitch(AngleUnit.DEGREES), 2));
+            telemetry.addData("Roll (Y)", JavaUtil.formatNumber(orientation.getRoll(AngleUnit.DEGREES), 2));
+            // Display angular velocity.
+            telemetry.addData("Yaw (Z) velocity", JavaUtil.formatNumber(angularVelocity.zRotationRate, 2));
+            telemetry.addData("Pitch (X) velocity", JavaUtil.formatNumber(angularVelocity.xRotationRate, 2));
+            telemetry.addData("Roll (Y) velocity", JavaUtil.formatNumber(angularVelocity.yRotationRate, 2));
+            telemetry.update();
 
             //limitSwitch();
 
@@ -314,6 +321,15 @@ public class ImuAutoTest extends LinearOpMode {
     }
 
     private void moveForward2(int encoder_Ticks) {
+
+        yaw = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYX, AngleUnit.DEGREES).thirdAngle;
+        if (yaw < -5) {
+
+        } else if (yaw > 5) {
+
+        } else {
+            motorBackLeft.setPower(speed);
+        }
 
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -495,71 +511,6 @@ public class ImuAutoTest extends LinearOpMode {
         //tester line to see if this builds
 
      */
-    void composeTelemetry() {
-
-        // At the beginning of each telemetry update, grab a bunch of data
-        // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            gravity  = imu.getGravity();
-        }
-        });
-
-        telemetry.addLine()
-                .addData("status", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getSystemStatus().toShortString();
-                    }
-                })
-                .addData("calib", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getCalibrationStatus().toString();
-                    }
-                });
-
-        telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
-
-        telemetry.addLine()
-                .addData("grvty", new Func<String>() {
-                    @Override public String value() {
-                        return gravity.toString();
-                    }
-                })
-                .addData("mag", new Func<String>() {
-                    @Override public String value() {
-                        return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(gravity.xAccel*gravity.xAccel
-                                        + gravity.yAccel*gravity.yAccel
-                                        + gravity.zAccel*gravity.zAccel));
-                    }
-                });
-    }
-    String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-
-    String formatDegrees(double degrees){
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
 
 }
 

@@ -40,7 +40,7 @@ public class autoDriveLeftBlue extends LinearOpMode {
     int fl;
     int fr;
 
-
+    float yaw;
 
     //CAMERA
     OpenCvCamera camera;
@@ -90,6 +90,8 @@ public class autoDriveLeftBlue extends LinearOpMode {
         // Put initialization blocks here.
         speed = 0.6;
         double slideMotorVelocity = 2800;
+
+
 
 
         //slideMotor.setDirection(DcMotorEx.Direction.REVERSE);
@@ -278,6 +280,8 @@ public class autoDriveLeftBlue extends LinearOpMode {
     }
 
     private void moveForward2(int encoder_Ticks) {
+
+
 
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
