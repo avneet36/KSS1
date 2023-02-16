@@ -36,7 +36,7 @@ public class imuTestAuto extends LinearOpMode {
     private DcMotor motorFrontLeft;
 
 
-    private DcMotorEx slideMotor;
+    //private DcMotorEx slideMotor;
     private Servo claw;
     private Servo rotation;
 
@@ -97,14 +97,14 @@ public class imuTestAuto extends LinearOpMode {
 
         claw = hardwareMap.get(Servo.class, "claw");
         rotation = hardwareMap.get(Servo.class, "rotation");
-        slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
+        //slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
 
         slideLimitSwitch = hardwareMap.get(DigitalChannel.class, "slideLimitSwitch");
 
-        slideMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        //slideMotor.setDirection(DcMotorEx.Direction.REVERSE);
         // Put initialization blocks here.
         speed = 0.6;
-        double slideMotorVelocity = 2800;
+        double slideMotorVelocity = 0;
 
         YawPitchRollAngles orientation;
         AngularVelocity angularVelocity;
@@ -130,7 +130,7 @@ public class imuTestAuto extends LinearOpMode {
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
 
         motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -251,7 +251,7 @@ public class imuTestAuto extends LinearOpMode {
             }
 
             /* Actually do something useful */
-            if (tagOfInterest == null || tagOfInterest.id == LEFT) {
+            /*if (tagOfInterest == null || tagOfInterest.id == LEFT) {
                 claw.setPosition(0.3);
                 sleep(1500);
                 slide(2830);
@@ -283,7 +283,6 @@ public class imuTestAuto extends LinearOpMode {
                 sleep (1200);
                 moveForward2(400);
 
-
             }
 
             while (opModeIsActive()) {
@@ -303,7 +302,7 @@ public class imuTestAuto extends LinearOpMode {
                 telemetry.update();
             }
         }
-    }
+
 
     /**
      * Describe this function...
@@ -448,22 +447,19 @@ public class imuTestAuto extends LinearOpMode {
 
     private void limitSwitch(){
         if (slideLimitSwitch.getState() == false) {
-            slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            //slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             sleep(100);
-            slideMotor.setTargetPosition(150);
-            slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            slideMotor.setPower(0.4);
+            //slideMotor.setTargetPosition(150);
+            //slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            //slideMotor.setPower(0.4);
 
         }
 
     }
 
-    private void slide(int target_Position){
-        slideMotor.setTargetPosition(target_Position);
-        slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        slideMotor.setPower(0.53);
 
-    }
+
+
 
     private void turnLeft(int encoder_Ticks) {
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
