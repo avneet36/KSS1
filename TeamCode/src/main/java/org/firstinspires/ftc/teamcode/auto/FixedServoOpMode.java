@@ -9,7 +9,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class FixedServoOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
-        ServoArm arm = new ServoArm(hardwareMap);
+        ServoArm arm = new ServoArm(hardwareMap) {
+            @Override
+            public void runOpMode() throws InterruptedException {
+
+            }
+        };
 
         waitForStart();
 

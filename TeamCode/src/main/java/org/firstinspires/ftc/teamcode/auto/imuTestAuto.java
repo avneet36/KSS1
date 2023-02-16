@@ -448,12 +448,9 @@ public class imuTestAuto extends LinearOpMode {
 
     }
 
-    private void slide(int target_Position){
-        //slideMotor.setTargetPosition(target_Position);
-        //slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        //slideMotor.setPower(0.53);
 
-    }
+
+
 
     private void turnLeft(int encoder_Ticks) {
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
