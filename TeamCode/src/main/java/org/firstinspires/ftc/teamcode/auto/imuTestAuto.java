@@ -323,11 +323,20 @@ public class imuTestAuto extends LinearOpMode {
 
         yaw = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYX, AngleUnit.DEGREES).thirdAngle;
         if (yaw < -5) {
-
+            motorFrontRight.setPower(speed+0.1);
+            motorBackRight.setPower(speed+0.1);
+            motorFrontLeft.setPower(speed-0.1);
+            motorBackLeft.setPower(speed-0.1);
         } else if (yaw > 5) {
-
+            motorFrontRight.setPower(speed-0.1);
+            motorBackRight.setPower(speed-0.1);
+            motorFrontLeft.setPower(speed+0.1);
+            motorBackLeft.setPower(speed+0.1);
         } else {
             motorBackLeft.setPower(speed);
+            motorFrontLeft.setPower(speed);
+            motorBackRight.setPower(speed);
+            motorFrontRight.setPower(speed);
         }
 
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
