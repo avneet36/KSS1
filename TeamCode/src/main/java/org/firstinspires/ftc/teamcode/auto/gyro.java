@@ -96,6 +96,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class gyro extends LinearOpMode {
 
     /* Declare OpMode members. */
+    double integralSum = 0;
+    public static double Kp = 0.002;
+    public static double Ki = 0.000005;
+    public static double Kd = 0.00005;
+
+    ElapsedTime timer = new ElapsedTime();
+    private double lastError = 0;
     private DcMotorEx motorFrontLeft = null;
     private DcMotorEx motorBackLeft = null;
     private DcMotorEx motorFrontRight = null;
@@ -264,6 +271,7 @@ public class gyro extends LinearOpMode {
             // Set the required driving speed  (must be positive for RUN_TO_POSITION)
             // Start driving straight, and then enter the control loop
             maxDriveSpeed = Math.abs(maxDriveSpeed);
+            maxDriveSpeed = PIDControl(leftTarget, motorFrontRight.getCurrentPosition());
             moveRobot(maxDriveSpeed, 0);
 
             // keep looping while we are still active, and BOTH motors are running.
@@ -475,5 +483,16 @@ public class gyro extends LinearOpMode {
         // Save a new heading offset equal to the current raw heading.
         headingOffset = getRawHeading();
         robotHeading = 0;
+    }
+
+    public double PIDControl(double reference, double state) {
+        double error = reference - state;
+        integralSum += error * timer.seconds();
+        double derivative = (error - lastError) / timer.seconds();
+        lastError = error;
+
+        timer.reset();
+
+        return (error * Kp) + (derivative * Kd) + (integralSum * Ki);
     }
 }
