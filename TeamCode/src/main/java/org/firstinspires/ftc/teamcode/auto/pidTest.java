@@ -15,9 +15,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class pidTest extends LinearOpMode {
     double integralSum = 0;
-    public static double Kp = 0.0005;
-    public static double Ki = 0;
-    public static double Kd = 0;
+    public static double Kp = 0.002;
+    public static double Ki = 0.000005;
+    public static double Kd = 0.00005;
+    private DcMotorEx motorFrontLeft = null;
+    private DcMotorEx motorBackLeft = null;
+    private DcMotorEx motorFrontRight = null;
+    private DcMotorEx motorBackRight = null;
 
     FtcDashboard dashboard;
     ElapsedTime timer = new ElapsedTime();
@@ -26,21 +30,20 @@ public class pidTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotorEx motorFrontLeft = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
-        DcMotorEx motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
-        DcMotorEx motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
-        DcMotorEx motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+        motorFrontLeft = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+        motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
+        motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+        motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
 
 
         dashboard = FtcDashboard.getInstance();
@@ -48,18 +51,31 @@ public class pidTest extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            double power = PIDControl(targetPosition, motorFrontRight.getCurrentPosition());
+            moveForward(1000
+            );
             dashboardTelemetry.addData("Motor Position ", motorFrontRight.getCurrentPosition());
-            dashboardTelemetry.addData("Power", power);
             dashboardTelemetry.addData("Target Position", targetPosition);
-            dashboardTelemetry.addData("Timer", timer);
             dashboardTelemetry.update();
-            motorFrontRight.setPower(power);
-            motorFrontLeft.setPower(power);
-            motorBackRight.setPower(power);
-            motorBackLeft.setPower(power);
             }
         }
+
+    private void moveForward(int targetPosition){
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        double power = PIDControl(targetPosition, motorFrontRight.getCurrentPosition());
+        motorFrontRight.setPower(power);
+        motorFrontLeft.setPower(power);
+        motorBackRight.setPower(power);
+        motorBackLeft.setPower(power);
+    }
 
     public double PIDControl(double reference, double state) {
         double error = reference - state;
