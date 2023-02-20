@@ -64,8 +64,7 @@ public class pidTest extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            moveForward(1000
-            );
+            moveForward(1000);
             dashboardTelemetry.addData("Motor Position ", motorFrontRight.getCurrentPosition());
             dashboardTelemetry.addData("Target Position", targetPosition);
             dashboardTelemetry.update();
@@ -84,6 +83,7 @@ public class pidTest extends LinearOpMode {
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         double power = PIDControl(targetPosition, motorFrontRight.getCurrentPosition());
+
         motorFrontRight.setPower(power);
         motorFrontLeft.setPower(power);
         motorBackRight.setPower(power);
