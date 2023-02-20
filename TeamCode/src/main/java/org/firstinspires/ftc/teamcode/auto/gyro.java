@@ -155,8 +155,8 @@ public class gyro extends LinearOpMode {
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // define initialization values for IMU, and then initialize it.
@@ -194,11 +194,11 @@ public class gyro extends LinearOpMode {
         //          holdHeading() is used after turns to let the heading stabilize
         //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
-        driveStraight(DRIVE_SPEED, 36.0, 0.0);    // Drive Forward 24"
-        //turnToHeading( TURN_SPEED, 90.0);               // Turn  CW to -45 Degrees
-        //holdHeading( TURN_SPEED, 90.0, 0.5);   // Hold -45 Deg heading for a 1/2 second
+        driveStraight(DRIVE_SPEED, 32.0, 0.0);    // Drive Forward 24"
+        turnToHeading( TURN_SPEED, 90.0);               // Turn  CW to -45 Degrees
+        holdHeading( TURN_SPEED, 90.0, 0.5);   // Hold -45 Deg heading for a 1/2 second
 
-        //driveStraight(DRIVE_SPEED, 24.0, 90.0);  // Drive Forward 17" at -45 degrees (12"x and 12"y)
+        //driveStraight(DRIVE_SPEED, 12.0, 90.0);  // Drive Forward 17" at -45 degrees (12"x and 12"y)
         /*turnToHeading( TURN_SPEED,  45.0);               // Turn  CCW  to  45 Degrees
         holdHeading( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
 

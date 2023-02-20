@@ -79,7 +79,7 @@ public class finalTeleOp extends LinearOpMode {
 
         //Direction
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         slide1.setDirection(DcMotorEx.Direction.REVERSE);

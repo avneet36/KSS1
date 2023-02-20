@@ -38,8 +38,13 @@ public class pidTest extends LinearOpMode {
 
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
 
