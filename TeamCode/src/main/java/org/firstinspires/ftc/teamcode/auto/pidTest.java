@@ -34,10 +34,11 @@ public class pidTest extends LinearOpMode {
         motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
         motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
         motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
-        DcMotorEx motorFrontLeft = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
-        DcMotorEx motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
-        DcMotorEx motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
-        DcMotorEx motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+
+        motorFrontLeft = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+        motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
+        motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+        motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
 
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
