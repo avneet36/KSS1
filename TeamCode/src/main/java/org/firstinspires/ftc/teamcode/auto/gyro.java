@@ -97,9 +97,9 @@ public class gyro extends LinearOpMode {
 
     /* Declare OpMode members. */
     double integralSum = 0;
-    public static double Kp = 0.002;
-    public static double Ki = 0.000005;
-    public static double Kd = 0.00005;
+    public static double Kp = 0.04;
+    public static double Ki = 0.000001;
+    public static double Kd = 0.0004;
 
     ElapsedTime timer = new ElapsedTime();
     private double lastError = 0;
@@ -137,7 +137,7 @@ public class gyro extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // They can/should be tweaked to suit the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.4;     // Max driving speed for better distance accuracy.
+    static final double     DRIVE_SPEED             = 0.6;     // Max driving speed for better distance accuracy.
     static final double     TURN_SPEED              = 0.2;     // Max Turn speed to limit turn rate
     static final double     HEADING_THRESHOLD       = 1.0 ;    // How close must the heading get to the target before moving to next step.
     // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
@@ -201,9 +201,23 @@ public class gyro extends LinearOpMode {
         //          holdHeading() is used after turns to let the heading stabilize
         //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
-        driveStraight(DRIVE_SPEED, 32.0, 0.0);    // Drive Forward 24"
+        driveStraight(DRIVE_SPEED, 50, 0.0);// Drive Forward 24"
+        sleep(5000);
+        turnToHeading( TURN_SPEED, -90.0);               // Turn  CW to -45 Degrees
+        holdHeading( TURN_SPEED, -90.0, 0.5);
+
+        driveStraight(DRIVE_SPEED, 71.0, -90.0);
+        sleep(5000);
         turnToHeading( TURN_SPEED, 90.0);               // Turn  CW to -45 Degrees
-        holdHeading( TURN_SPEED, 90.0, 0.5);   // Hold -45 Deg heading for a 1/2 second
+        holdHeading( TURN_SPEED, 90, 0.5);
+        driveStraight(DRIVE_SPEED, 71.0, 90.0);
+        sleep(5000);
+        turnToHeading( TURN_SPEED, 90.0);               // Turn  CW to -45 Degrees
+        holdHeading( TURN_SPEED, 180.0, 0.5);
+        driveStraight(DRIVE_SPEED, 50, 180.0);
+
+
+        // Hold -45 Deg heading for a 1/2 second
 
         //driveStraight(DRIVE_SPEED, 12.0, 90.0);  // Drive Forward 17" at -45 degrees (12"x and 12"y)
         /*turnToHeading( TURN_SPEED,  45.0);               // Turn  CCW  to  45 Degrees
@@ -493,6 +507,6 @@ public class gyro extends LinearOpMode {
 
         timer.reset();
 
-        return (error * Kp) + (derivative * Kd) + (integralSum * Ki);
+        return Range.clip((error * Kp) + (derivative * Kd) + (integralSum * Ki),-0.4,0.4);
     }
 }
