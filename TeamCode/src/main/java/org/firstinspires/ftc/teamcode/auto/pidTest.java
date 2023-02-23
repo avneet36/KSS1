@@ -14,9 +14,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class pidTest extends LinearOpMode {
     double integralSum = 0;
-    public static double Kp = 0.04;
-    public static double Ki = 0.000001;
-    public static double Kd = 0.0004;
+    public static double Kp = 0.002;
+    public static double Ki = 0.00005;
+    public static double Kd = 0.0005    ;
 
     private DcMotorEx motorBackLeft;
     private DcMotorEx motorBackRight;
@@ -81,6 +81,11 @@ public class pidTest extends LinearOpMode {
         integralSum += error * timer.seconds();
         double derivative = (error - lastError) / timer.seconds();
         lastError = error;
+
+        while ((state > (targetPosition-5))&&(state < (targetPosition+5) )){
+            error = 0;
+        }
+
 
         timer.reset();
 
