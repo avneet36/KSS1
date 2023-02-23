@@ -41,6 +41,7 @@ public class pidTest extends LinearOpMode {
 
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -82,6 +83,6 @@ public class pidTest extends LinearOpMode {
 
         timer.reset();
 
-        return Range.clip((error * Kp) + (derivative * Kd) + (integralSum * Ki),-0.4,0.4);
+        return Range.clip((error * Kp) + (derivative * Kd) + (integralSum * Ki),-0.6,0.6);
     }
 }
