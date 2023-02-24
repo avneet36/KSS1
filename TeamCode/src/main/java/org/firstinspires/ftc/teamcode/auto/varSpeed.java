@@ -10,23 +10,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-@Autonomous(name = "PID Test")
+@Autonomous(name = "varSpeed Test")
 @Config
-public class pidTest extends LinearOpMode {
-    double integralSum = 0;
-    public static double Kp = 0.002;
-    public static double Ki = 0.00005;
-    public static double Kd = 0.0005;
+public class varSpeed extends LinearOpMode {
 
     private DcMotorEx motorBackLeft;
     private DcMotorEx motorBackRight;
     private DcMotorEx motorFrontRight;
     private DcMotorEx motorFrontLeft;
+    double error;
+    double power;
 
     FtcDashboard dashboard;
-    ElapsedTime timer = new ElapsedTime();
-    private double lastError = 0;
-    public static double targetPosition = 2264;
+    public static double targetPosition = 1500;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,14 +30,6 @@ public class pidTest extends LinearOpMode {
         motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
         motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
         motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
-
-        motorFrontLeft = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
-        motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
-        motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
-        motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
-
-        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -58,34 +46,41 @@ public class pidTest extends LinearOpMode {
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         dashboard = FtcDashboard.getInstance();
+
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
         waitForStart();
+
         while (opModeIsActive()) {
-            double power = PIDControl(targetPosition, motorFrontRight.getCurrentPosition());
 
-            dashboardTelemetry.addData("Motor Position ", motorFrontRight.getCurrentPosition());
-            dashboardTelemetry.addData("Power", power);
-            dashboardTelemetry.addData("Target Position", targetPosition);
-            dashboardTelemetry.addData("Timer", timer);
-            dashboardTelemetry.update();
+            telemetry.addData("Error", error);
+            telemetry.addData("varSpeed", varspeed());
+            telemetry.update();
 
-            motorFrontRight.setPower(power);
-            motorFrontLeft.setPower(power);
-            motorBackRight.setPower(power);
-            motorBackLeft.setPower(power);
+
+            motorFrontRight.setPower(varspeed());
+            motorFrontLeft.setPower(varspeed());
+            motorBackRight.setPower(varspeed());
+            motorBackLeft.setPower(varspeed());
         }
     }
 
-    private double PIDControl(double reference, double state) {
-        double error = reference - state;
-        integralSum += error * timer.seconds();
-        double derivative = (error - lastError) / timer.seconds();
-        lastError = error;
+    private double varspeed() {
+        error = targetPosition - motorBackLeft.getCurrentPosition();
+        if (error > 500){
 
+            power = 0.8;
+            return power;
+        } else if (error == 0) {
+            power = 0;
+            return power;
+        }
+        else {
+            power = 0.8*(Math.pow((error/500),2));
+            // (((-0.8) / Math.pow(1500, 2)) * (Math.pow((error - 1500), 2)) + 0.8);
+            return power;
 
-
-        timer.reset();
-
-        return Range.clip((error * Kp) + (derivative * Kd) + (integralSum * Ki),-0.6,0.6);
+        }
     }
+
 }

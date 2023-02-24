@@ -35,11 +35,11 @@ Gyro extends LinearOpMode {
     private DcMotorEx motorBackLeft = null;
     private DcMotorEx motorFrontRight = null;
     private DcMotorEx motorBackRight = null;
-    private BNO055IMU imu = null;
+    private BNO055IMU       imu         = null;
 
     double integralSum = 0;
-    private static double Kp = 0.04;
-    private static double Ki = 0.000001;
+    private static double Kp = 0.008;
+    private static double Ki = 0.000021;
     private static double Kd = 0.0004;
 
     ElapsedTime timer = new ElapsedTime();
@@ -255,7 +255,7 @@ Gyro extends LinearOpMode {
     }
 
     void turnToPID(double targetAngle) {
-        TurnPIDController pid = new TurnPIDController(targetAngle, 0.04, 0.000001, 0.0004);
+        TurnPIDController pid = new TurnPIDController(targetAngle, 0.008, 0.000021, 0.0004);
         telemetry.setMsTransmissionInterval(50);
         // Checking lastSlope to make sure that it's not oscillating when it quits
         while (Math.abs(targetAngle - getAbsoluteAngle()) > 0.5 || pid.getLastSlope() > 0.75) {
@@ -276,7 +276,6 @@ Gyro extends LinearOpMode {
         integralSum += error * timer.seconds();
         double derivative = (error - lastError) / timer.seconds();
         lastError = error;
-
         timer.reset();
 
         return Range.clip((error * Kp) + (derivative * Kd) + (integralSum * Ki), -0.4, 0.4);
