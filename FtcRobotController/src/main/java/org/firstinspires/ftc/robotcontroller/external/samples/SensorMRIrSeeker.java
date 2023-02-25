@@ -80,6 +80,5 @@ public class SensorMRIrSeeker extends LinearOpMode {
 
       telemetry.update();
     }
-      return 0;
   }
 }

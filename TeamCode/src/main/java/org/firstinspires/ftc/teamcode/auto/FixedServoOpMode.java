@@ -13,7 +13,6 @@ public class FixedServoOpMode extends LinearOpMode {
             @Override
             public void runOpMode() throws InterruptedException {
 
-                return 0;
             }
         };
 
@@ -22,6 +21,5 @@ public class FixedServoOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             arm.setPosition(-gamepad1.left_stick_y);
         }
-        return 0;
     }
 }

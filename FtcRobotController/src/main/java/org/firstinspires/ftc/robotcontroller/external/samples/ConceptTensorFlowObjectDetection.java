@@ -151,7 +151,6 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                 }
             }
         }
-        return 0;
     }
 
     /**

@@ -35,7 +35,7 @@ Gyro extends LinearOpMode {
     private DcMotorEx motorBackLeft = null;
     private DcMotorEx motorFrontRight = null;
     private DcMotorEx motorBackRight = null;
-    private BNO055IMU imu = null;
+    private BNO055IMU       imu         = null;
 
     double integralSum = 0;
     private static double Kp = 0.008;
@@ -102,7 +102,6 @@ Gyro extends LinearOpMode {
         } else if (STAGE == 2) {
             turnPID(90);
         }
-        return 0;
     }
 
     // resets currAngle Value

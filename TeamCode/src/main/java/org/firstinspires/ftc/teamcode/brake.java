@@ -113,7 +113,6 @@ public class brake extends LinearOpMode {
                 telemetry.update();
             }
         }
-        return slideMotorVelocity;
     }
 
     /**

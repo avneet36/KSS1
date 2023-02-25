@@ -113,7 +113,6 @@ public class SensorKLNavxMicro extends LinearOpMode {
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
-        return 0;
     }
 
     String formatRate(float rate) {

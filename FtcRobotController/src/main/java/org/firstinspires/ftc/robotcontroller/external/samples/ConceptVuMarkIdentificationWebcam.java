@@ -186,7 +186,6 @@ public class ConceptVuMarkIdentificationWebcam extends LinearOpMode {
 
             telemetry.update();
         }
-        return 0;
     }
 
     String format(OpenGLMatrix transformationMatrix) {

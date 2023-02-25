@@ -152,7 +152,6 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                 }
             }
         }
-        return 0;
     }
 
     /**

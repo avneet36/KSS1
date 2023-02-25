@@ -196,6 +196,5 @@ public class ConceptGamepadRumble extends LinearOpMode
             telemetry.update();
             sleep(10);
         }
-        return 0;
     }
 }

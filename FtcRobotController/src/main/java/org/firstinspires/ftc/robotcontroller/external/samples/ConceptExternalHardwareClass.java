@@ -138,6 +138,5 @@ public class ConceptExternalHardwareClass extends LinearOpMode {
             // Pace this loop so hands move at a reasonable speed.
             sleep(50);
         }
-        return drive;
     }
 }

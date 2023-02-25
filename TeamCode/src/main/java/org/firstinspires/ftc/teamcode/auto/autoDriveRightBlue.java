@@ -285,7 +285,6 @@ public class autoDriveRightBlue extends LinearOpMode {
                 telemetry.update();
             }
         }
-        return slideMotorVelocity;
     }
 
     /**
