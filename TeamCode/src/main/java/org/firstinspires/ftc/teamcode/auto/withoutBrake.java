@@ -116,6 +116,7 @@ public class withoutBrake extends LinearOpMode {
                 telemetry.update();
             }
         }
+        return slideMotorVelocity;
     }
 
     /**

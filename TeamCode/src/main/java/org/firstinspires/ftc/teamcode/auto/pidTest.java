@@ -74,6 +74,7 @@ public class pidTest extends LinearOpMode {
             motorBackRight.setPower(power);
             motorBackLeft.setPower(power);
         }
+        return 0;
     }
 
     private double PIDControl(double reference, double state) {

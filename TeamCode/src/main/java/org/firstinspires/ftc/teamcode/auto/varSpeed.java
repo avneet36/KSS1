@@ -63,6 +63,7 @@ public class varSpeed extends LinearOpMode {
             motorBackRight.setPower(varspeed());
             motorBackLeft.setPower(varspeed());
         }
+        return 0;
     }
 
     private double varspeed() {

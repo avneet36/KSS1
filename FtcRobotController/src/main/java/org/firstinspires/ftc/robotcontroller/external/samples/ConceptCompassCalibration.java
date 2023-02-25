@@ -121,5 +121,6 @@ public class ConceptCompassCalibration extends LinearOpMode {
         else
             telemetry.addData("Compass", "Calibrate Passed.");
         telemetry.update();
+        return 0;
     }
 }

@@ -131,5 +131,6 @@ public class ConceptSoundsASJava extends LinearOpMode {
             wasX = isX;
             WasB = isB;
         }
+        return 0;
     }
 }

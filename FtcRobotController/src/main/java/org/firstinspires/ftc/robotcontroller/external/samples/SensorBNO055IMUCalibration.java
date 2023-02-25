@@ -176,6 +176,7 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
 
             telemetry.update();
         }
+        return 0;
     }
 
     void composeTelemetry() {

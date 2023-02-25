@@ -155,6 +155,7 @@ public class ConceptTelemetry extends LinearOpMode  {
             /** Update loop info and play nice with the rest of the {@link Thread}s in the system */
             loopCount++;
         }
+        return sPoemInterval;
     }
 
     // emits a line of poetry to the telemetry log
