@@ -92,6 +92,14 @@ public class withoutBrake extends LinearOpMode {
 
 
             while (opModeIsActive()) {
+
+                if (speed <= 0){
+
+                    motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                }
                 // Put loop blocks here.
                 bl = motorBackLeft.getCurrentPosition();
                 br = motorBackRight.getCurrentPosition();
