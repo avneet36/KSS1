@@ -138,7 +138,8 @@ public class gyroOnly extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // They can/should be tweaked to suit the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.8;     // Max driving speed for better distance accuracy.
+    static final double     DRIVE_SPEED             = 0.4;     // Max driving speed for better distance accuracy.
+
     static final double     TURN_SPEED              = 0.2;     // Max Turn speed to limit turn rate
     static final double     HEADING_THRESHOLD       = 1.0 ;    // How close must the heading get to the target before moving to next step.
     // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
@@ -190,10 +191,25 @@ public class gyroOnly extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            driveStraight(DRIVE_SPEED, 50, 0.0);// Drive Forward 24"
-            sleep(15000);
+            driveStraight(DRIVE_SPEED, 47, 0.0);// Drive Forward 24"
+            sleep (2000);
+            turnToHeading(TURN_SPEED, 90);
+            holdHeading( TURN_SPEED, 90, 1);
+            driveStraight(DRIVE_SPEED,14, 90);
+
+
 
             while (opModeIsActive()){
+
+               /* if ((power) <= 0){
+
+                    motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                }
+
+                */
                 //error = leftTarget - motorBackLeft.getCurrentPosition();
 /*
                 telemetry.addData("Error", error);
@@ -279,7 +295,12 @@ public class gyroOnly extends LinearOpMode {
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-
+            telemetry.addData("Target Pos BL:BR",  "%7d:%7d",      leftTarget,  rightTarget);
+            telemetry.addData("Actual Pos BL:BR",  "%7d:%7d",      motorBackLeft.getCurrentPosition(),
+                    motorBackRight.getCurrentPosition());
+            telemetry.addData("Power", power);
+            telemetry.addData("BL Power", motorBackLeft.getPower());
+            telemetry.update();
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * COUNTS_PER_INCH);
             leftTarget = motorFrontLeft.getCurrentPosition() + moveCounts;
@@ -504,44 +525,29 @@ public class gyroOnly extends LinearOpMode {
     private void sendTelemetry(boolean straight) {
 
         if (straight) {
-            /*telemetry.addData("Motion", "Drive Straight");
-            telemetry.addData("Target Pos BL:BR",  "%7d:%7d",      leftTarget,  rightTarget);
-            telemetry.addData("Actual Pos BL:BR",  "%7d:%7d",      motorBackLeft.getCurrentPosition(),
-                    motorBackRight.getCurrentPosition());
-            telemetry.addData("Actual Pos FL:FR",  "%7d:%7d",      motorFrontLeft.getCurrentPosition(), motorFrontRight.getCurrentPosition());
 
-            telemetry.addData("Error", error);
-            telemetry.addData("VarSpeed", power);
-            telemetry.addData("Power: BL : BR : FL : FR","%7d:%7d",motorBackLeft.getPower(), motorBackRight.getPower(), motorFrontLeft.getPower(), motorFrontRight.getPower() );
+            telemetry.addData("Power: BL: FR","%7d:%7d",motorBackLeft.getPower(), motorFrontRight.getPower());
 
-            telemetry.addData("Target Pos BL:BR",  "%7d:%7d",      leftTarget,  rightTarget);
-            telemetry.addData("Actual Pos BL:BR",  "%7d:%7d",      motorBackLeft.getCurrentPosition(),
-                    motorBackRight.getCurrentPosition());
-            telemetry.addData("Actual Pos FL:FR",  "%7d:%7d",      motorFrontLeft.getCurrentPosition(), motorFrontRight.getCurrentPosition());
 
             telemetry.addData("Angle Target:Current", "%5.2f:%5.0f", targetHeading, robotHeading);
-            telemetry.addData("Error:Steer",  "%5.1f:%5.1f", headingError, turnSpeed);
-            telemetry.addData("Wheel Speeds L:R.", "%5.2f : %5.2f", leftSpeed, rightSpeed);
+            telemetry.addData("Error:Steer",  "%5.1d:%5.1d", headingError, turnSpeed);
+            telemetry.addData("Wheel Speeds L:R.", "%5.2d : %5.2d", leftSpeed, rightSpeed);
 
-
-
-            telemetry.update();
-
-             */
             telemetry.addData("Error", error);
             telemetry.addData("VarSpeed", power);
             telemetry.update();
+
+
 
         } else {
             //telemetry.addData("Motion", "Turning");
         }
-/*
+
         telemetry.addData("Angle Target:Current", "%5.2f:%5.0f", targetHeading, robotHeading);
         telemetry.addData("Error:Steer",  "%5.1f:%5.1f", headingError, turnSpeed);
         telemetry.addData("Wheel Speeds L:R.", "%5.2f : %5.2f", leftSpeed, rightSpeed);
         telemetry.update();
 
- */
     }
 
     /**

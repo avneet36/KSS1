@@ -58,7 +58,7 @@ public class brake extends LinearOpMode {
 
 
         // Put initialization blocks here.
-        speed = 0.8;
+        speed = 0.6;
         double slideMotorVelocity = 2800;
 
 
@@ -91,12 +91,19 @@ public class brake extends LinearOpMode {
         if (opModeIsActive()) {
 
             moveForward2(2300);
-            sleep(2000);
+            sleep(2500);
             Strafe_Left(1000);
 
 
 
             while (opModeIsActive()) {
+                if (speed <= 0){
+
+                    motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                }
                 // Put loop blocks here.
                 bl = motorBackLeft.getCurrentPosition();
                 br = motorBackRight.getCurrentPosition();
@@ -151,6 +158,8 @@ public class brake extends LinearOpMode {
         motorBackRight.setPower(speed);
         motorFrontLeft.setPower(speed);
         motorFrontRight.setPower(speed);
+
+
 
         sleep(1000);
     }
