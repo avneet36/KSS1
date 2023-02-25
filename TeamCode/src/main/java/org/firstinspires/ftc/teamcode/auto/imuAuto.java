@@ -130,6 +130,7 @@ public class imuAuto extends LinearOpMode {
             sleep(5000);
             moveForward(1000);
         }
+        return 0;
     }
 
     private void moveForward(int encoderTicks) {

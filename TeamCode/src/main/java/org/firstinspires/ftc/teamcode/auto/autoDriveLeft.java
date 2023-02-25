@@ -271,6 +271,7 @@ public class autoDriveLeft extends LinearOpMode {
                 telemetry.update();
             }
         }
+        return slideMotorVelocity;
     }
 
     /**

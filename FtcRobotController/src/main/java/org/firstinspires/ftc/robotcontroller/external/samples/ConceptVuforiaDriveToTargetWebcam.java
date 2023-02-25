@@ -199,5 +199,6 @@ public class ConceptVuforiaDriveToTargetWebcam extends LinearOpMode
 
             sleep(10);
         }
+        return targetRange;
     }
 }

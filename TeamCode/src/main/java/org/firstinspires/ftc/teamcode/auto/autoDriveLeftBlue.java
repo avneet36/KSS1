@@ -223,12 +223,12 @@ public class autoDriveLeftBlue extends LinearOpMode {
                 claw.setPosition(0.7);
                 sleep (600);
                 moveForward2(-500);
-                sleep(600);
+                sleep(600);*/
                 Strafe_Left(1370);
                 sleep(1000);
                 slide(0);
 
-                 */
+
 
             } else if (tagOfInterest.id == MIDDLE) {
 
@@ -262,6 +262,7 @@ public class autoDriveLeftBlue extends LinearOpMode {
                 telemetry.update();
             }
         }
+
     }
 
     /**

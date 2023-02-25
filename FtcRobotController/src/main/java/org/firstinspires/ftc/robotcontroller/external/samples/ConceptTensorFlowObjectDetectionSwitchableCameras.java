@@ -156,6 +156,7 @@ public class ConceptTensorFlowObjectDetectionSwitchableCameras extends LinearOpM
                 }
             }
         }
+        return 0;
     }
 
     /**

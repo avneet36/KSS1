@@ -135,5 +135,6 @@ public class SensorMRColor extends LinearOpMode {
         relativeLayout.setBackgroundColor(Color.WHITE);
       }
     });
+      return 0;
   }
 }

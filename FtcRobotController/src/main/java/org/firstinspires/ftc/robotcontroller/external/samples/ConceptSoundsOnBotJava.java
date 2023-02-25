@@ -115,5 +115,6 @@ public class ConceptSoundsOnBotJava extends LinearOpMode {
             wasX = isX;
             WasB = isB;
         }
+        return 0;
     }
 }

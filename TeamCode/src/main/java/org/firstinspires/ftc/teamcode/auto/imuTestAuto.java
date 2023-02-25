@@ -301,7 +301,8 @@ public class imuTestAuto extends LinearOpMode {
                 //telemetry.addData("Arm Ticks: ", armMotor.getCurrentPosition());
                 telemetry.update();
             }
-        }
+        return slideMotorVelocity;
+    }
 
 
     /**

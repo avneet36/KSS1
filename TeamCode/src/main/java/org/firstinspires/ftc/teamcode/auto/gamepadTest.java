@@ -38,7 +38,7 @@ public class gamepadTest extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
+        if (isStopRequested()) return 0;
 
 
         while (opModeIsActive()) {
@@ -48,5 +48,6 @@ public class gamepadTest extends LinearOpMode {
 
             sleep(20);
         }
+        return 0;
     }
 }

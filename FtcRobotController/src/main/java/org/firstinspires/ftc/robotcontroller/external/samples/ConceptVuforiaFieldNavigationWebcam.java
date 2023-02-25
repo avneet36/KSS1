@@ -256,6 +256,7 @@ public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
         // Disable Tracking when we are done;
         targets.deactivate();
+        return 0;
     }
 
     /***
