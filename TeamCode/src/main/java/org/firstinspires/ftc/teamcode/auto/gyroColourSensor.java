@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="Gyro Only", group="Robot")
+@Autonomous(name="GyroColorSensor", group="Robot")
 
 public class gyroColourSensor extends LinearOpMode {
 
