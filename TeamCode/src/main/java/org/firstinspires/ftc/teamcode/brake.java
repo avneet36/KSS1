@@ -159,7 +159,18 @@ public class brake extends LinearOpMode {
         motorFrontLeft.setPower(speed);
         motorFrontRight.setPower(speed);
 
+        while (motorFrontLeft.isBusy() || motorBackLeft.isBusy() || motorFrontRight.isBusy() || motorBackRight.isBusy()){
+            telemetry.addData("hhh", motorBackLeft.getCurrentPosition());
+        }
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontLeft.setPower(0);
+        motorFrontRight.setPower(0);
 
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         sleep(1000);
     }

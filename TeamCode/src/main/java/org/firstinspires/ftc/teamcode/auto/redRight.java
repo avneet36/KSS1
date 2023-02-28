@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -14,18 +15,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="GyroColorSensor", group="Robot")
+@Autonomous(name="Red Right")
 
-public class gyroColourSensor extends LinearOpMode {
+public class redRight extends LinearOpMode {
 
     int moveCounts;
     //double power;
     ElapsedTime timer = new ElapsedTime();
 
+    private Servo claw = null;
+    private Servo rotation = null;
     private DcMotorEx motorFrontLeft = null;
     private DcMotorEx motorBackLeft = null;
     private DcMotorEx motorFrontRight = null;
     private DcMotorEx motorBackRight = null;
+    private DcMotorEx slide1 = null;
+    private DcMotorEx slide2 = null;
+
     private BNO055IMU imu = null;
 
     private double robotHeading  = 0;
@@ -65,6 +71,10 @@ public class gyroColourSensor extends LinearOpMode {
         motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
         motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
         motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+        claw = hardwareMap.get(Servo.class, "claw");
+        rotation = hardwareMap.get(Servo.class, "rotation");
+        slide1= hardwareMap.get(DcMotorEx.class, "slide1");
+        slide2= hardwareMap.get(DcMotorEx.class, "slide2");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -87,6 +97,9 @@ public class gyroColourSensor extends LinearOpMode {
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        slide1.setDirection(DcMotorEx.Direction.REVERSE);
+        slide2.setDirection(DcMotorEx.Direction.FORWARD);
+
 
         // Wait for the game to start (Display Gyro value while waiting)
         while (opModeInInit()) {
@@ -95,9 +108,29 @@ public class gyroColourSensor extends LinearOpMode {
         }
 
         if (opModeIsActive()) {
-
-            driveStraight(DRIVE_SPEED, 50, 0.0);// Drive Forward 24"
+            claw.setPosition(0.33);
+            driveStraight(DRIVE_SPEED, 5, 0.0);
             sleep(500);
+            turnToHeading(TURN_SPEED, -90);
+            sleep(500);
+            driveStraight(DRIVE_SPEED, 20, -90);// Drive Forward 24"
+            sleep(500);
+            strafeLeft(DRIVE_SPEED,45, -90);
+            //Placeholder for sensor code
+            //Robot Aligns its self on the line
+            sleep(500);
+            driveBackward(DRIVE_SPEED,  20, -90);
+            slide(2830);
+            rotation.setPosition(0.7);
+            sleep(500);
+            claw.setPosition(0.7);
+
+
+
+
+
+
+
 
         }
     }
@@ -111,6 +144,65 @@ public class gyroColourSensor extends LinearOpMode {
             motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int)(distance * COUNTS_PER_INCH);
+            leftTarget = motorFrontLeft.getCurrentPosition() + moveCounts;
+            rightTarget = motorBackRight.getCurrentPosition() + moveCounts;
+
+            // Set Target FIRST, then turn on RUN_TO_POSITION
+            motorFrontLeft.setTargetPosition(leftTarget);
+            motorBackLeft.setTargetPosition(leftTarget);
+            motorBackRight.setTargetPosition(rightTarget);
+            motorFrontRight.setTargetPosition(rightTarget);
+
+
+            motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            maxDriveSpeed = Math.abs(maxDriveSpeed);
+
+            moveRobot(maxDriveSpeed,0);
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opModeIsActive() && (motorBackLeft.isBusy() && motorBackRight.isBusy() && motorFrontRight.isBusy() && motorFrontLeft.isBusy())) {
+
+
+                // Determine required steering to keep on heading
+                turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    turnSpeed *= -1.0;
+
+                // Apply the turning correction to the current driving speed.
+                moveRobot(driveSpeed, turnSpeed);
+
+
+                // Display drive status for the driver.
+                sendTelemetry(true);
+            }
+
+            // Stop all motion & Turn off RUN_TO_POSITION
+            moveRobot(0, 0);
+
+            motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+    public void driveBackward(double maxDriveSpeed, double distance, double heading)  {
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * COUNTS_PER_INCH);
@@ -220,7 +312,6 @@ public class gyroColourSensor extends LinearOpMode {
             motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
-
     public void turnToHeading(double maxTurnSpeed, double heading) {
 
         // Run getSteeringCorrection() once to pre-calculate the current error
@@ -245,7 +336,6 @@ public class gyroColourSensor extends LinearOpMode {
         // Stop all motion;
         moveRobot(0, 0);
     }
-
     public void holdHeading(double maxTurnSpeed, double heading, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
@@ -337,6 +427,14 @@ public class gyroColourSensor extends LinearOpMode {
         // Save a new heading offset equal to the current raw heading.
         headingOffset = getRawHeading();
         robotHeading = 0;
+    }
+    private void slide(int target_Position){
+        slide1.setTargetPosition(target_Position);
+        slide2.setTargetPosition(target_Position);
+        slide1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        slide2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        slide1.setVelocity(1000);
+        slide2.setVelocity(1000);
     }
 
 }

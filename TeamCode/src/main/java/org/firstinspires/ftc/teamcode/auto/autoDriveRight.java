@@ -422,7 +422,6 @@ public class autoDriveRight extends LinearOpMode {
         slideMotor.setTargetPosition(target_Position);
         slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         slideMotor.setPower(0.53);
-
     }
 
     private void turnLeft(int encoder_Ticks) {
