@@ -36,7 +36,7 @@ public class finalTeleOp extends LinearOpMode {
     //variables
     //double slideMotorPower = 0.50;
     int maxSlideEncoderTicks = 3980;
-    double slideVelocity = 4000;
+    double slideVelocity = 1000;
     double chassisSpeed = 0.5;
 
     //boolean Override = true;
@@ -60,6 +60,7 @@ public class finalTeleOp extends LinearOpMode {
      */
 
 
+    @Override
     public void runOpMode() throws InterruptedException {
 
         motorFrontLeft = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
@@ -81,8 +82,8 @@ public class finalTeleOp extends LinearOpMode {
         motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        slide1.setDirection(DcMotorEx.Direction.REVERSE);
-        slide2.setDirection(DcMotorEx.Direction.FORWARD);
+        slide1.setDirection(DcMotorEx.Direction.FORWARD);
+        slide2.setDirection(DcMotorEx.Direction.REVERSE);
 
 
 
@@ -191,9 +192,7 @@ public class finalTeleOp extends LinearOpMode {
             motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         }
-
          */
 
 
@@ -234,7 +233,6 @@ public class finalTeleOp extends LinearOpMode {
             timeSinceToggleClaw.reset();
             clawOutput = "open";
         }
-
          */
 
 
@@ -298,7 +296,6 @@ public class finalTeleOp extends LinearOpMode {
             clawBoolean = true;
             activate = 0;
         }
-
          */
 
     }
@@ -311,7 +308,6 @@ public class finalTeleOp extends LinearOpMode {
         }else if (gamepad1.a && !Override && timeSinceToggleArm.milliseconds() > 300) {
             Override = true;
             timeSinceToggleArm.reset();
-
         }if (gamepad1.dpad_up && Override && (armLimitSwitch.getState() == true)) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(0.35);
@@ -335,17 +331,12 @@ public class finalTeleOp extends LinearOpMode {
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideMotor.setPower(0.3);
         }
-
-
-
         }else {
             armMotor.setTargetPosition(armMotorCurrentPosition);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             armMotor.setPower(0.15);
         }
-
     }
-
     */
 
 
