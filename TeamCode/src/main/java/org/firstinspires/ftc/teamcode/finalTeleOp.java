@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -11,8 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 //Tst for git
-
-
 @TeleOp
 public class finalTeleOp extends LinearOpMode {
     //drive
@@ -20,29 +17,23 @@ public class finalTeleOp extends LinearOpMode {
     private DcMotorEx motorBackLeft = null;
     private DcMotorEx motorFrontRight = null;
     private DcMotorEx motorBackRight = null;
-
     //arm
     private Servo claw = null;
     private Servo rotation = null;
     private DcMotorEx slide1 = null;
     private DcMotorEx slide2 = null;
-
     //limit Switch
     private DigitalChannel slideLimitSwitch = null;
     private final ElapsedTime timeSinceToggleClaw = new ElapsedTime();
     private final ElapsedTime timeSinceToggleSlide = new ElapsedTime();
-
-
     //variables
     //double slideMotorPower = 0.50;
     int maxSlideEncoderTicks = 3980;
-    double slideVelocity = 1000;
+    double slideVelocity = 4000;
     double chassisSpeed = 0.5;
-
     //boolean Override = true;
     boolean clawBoolean = true;
     boolean manualAuto = true;
-
     float y;
     float x;
     double rx;
@@ -54,7 +45,6 @@ public class finalTeleOp extends LinearOpMode {
     int targetPosition;
     int activate;
     int reset;
-
     /* 5/8" - tile size
         encoder value to travel half tile =
      */
@@ -71,12 +61,7 @@ public class finalTeleOp extends LinearOpMode {
         rotation = hardwareMap.get(Servo.class, "rotation");
         slide1= hardwareMap.get(DcMotorEx.class, "slide1");
         slide2= hardwareMap.get(DcMotorEx.class, "slide2");
-
         slideLimitSwitch = hardwareMap.get(DigitalChannel.class, "slideLimitSwitch");
-
-
-
-
         //Direction
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -84,22 +69,12 @@ public class finalTeleOp extends LinearOpMode {
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         slide1.setDirection(DcMotorEx.Direction.FORWARD);
         slide2.setDirection(DcMotorEx.Direction.REVERSE);
-
-
-
         slideLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
-
         //Arm Encoders
         slide1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slide2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
-
         waitForStart();
-
-
-
         claw.setPosition(0.7);
-
         timeSinceToggleClaw.reset();
         timeSinceToggleSlide.reset();
         telemetry.addLine("Init.... Press play");
@@ -107,14 +82,10 @@ public class finalTeleOp extends LinearOpMode {
         telemetry.addData("Claw Position: ", claw.getPosition() +  clawOutput);
         telemetry.addData("Rotation Servo Position: ", rotationOutput);
         telemetry.update();
-
         while (opModeIsActive()) {
-
             mechanumDrive();
             claw();
             limitSwitch();
-
-
             telemetry.addData("Slide1 Speed: ", slide1.getVelocity());
             telemetry.addData("Slide2 Speed: ", slide2.getVelocity());
             telemetry.addData("Claw Position: ", claw.getPosition());
@@ -132,10 +103,7 @@ public class finalTeleOp extends LinearOpMode {
             telemetry.addData("FL", motorFrontLeft.getCurrentPosition());
             telemetry.addData("joystick x ", gamepad2.left_stick_x);
             telemetry.addData("joystick y ", gamepad2.left_stick_y);
-
-
             telemetry.update();
-
             if ((slide1.getCurrentPosition() >= maxSlideEncoderTicks) || (slide2.getCurrentPosition() >= maxSlideEncoderTicks)){
                 slide1.setTargetPosition(3970);
                 slide2.setTargetPosition(3970);
@@ -144,28 +112,22 @@ public class finalTeleOp extends LinearOpMode {
                 slide1.setVelocity(slideVelocity);
                 slide2.setVelocity(slideVelocity);
             }
-
             if (manualAuto) {
                 slideAuto();
             }
             else if (!manualAuto){
                 slideManual();
             }
-
             if ((gamepad1.left_bumper) && (manualAuto) && (timeSinceToggleSlide.milliseconds() > 300)) {
                 manualAuto = false;
                 timeSinceToggleSlide.reset();
-
             }
             else if ((gamepad1.left_bumper) && (!manualAuto) && (timeSinceToggleSlide.milliseconds() > 300)) {
                 manualAuto = true;
                 timeSinceToggleSlide.reset();
-
             }
-
         }
     }
-
     private void mechanumDrive() {
         y = -gamepad2.left_stick_y;
         x = gamepad2.left_stick_x;
@@ -176,16 +138,12 @@ public class finalTeleOp extends LinearOpMode {
         // This ensures all the powers maintain
         // the same ratio, but only when at least one is
         // out of the range [-1, 1].
-
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         // Make sure your ID's match your configuration
         motorFrontLeft.setPower((((y + x) + rx) / denominator) * ((0.5*(gamepad2.left_trigger-1)*(gamepad2.left_trigger-1)+0.2) * (0.4*(gamepad2.right_trigger)*(gamepad2.right_trigger)+0.6)));
         motorBackLeft.setPower((((y - x) + rx) / denominator)* ((0.5*(gamepad2.left_trigger-1)*(gamepad2.left_trigger-1)+0.2) * (0.4*(gamepad2.right_trigger)*(gamepad2.right_trigger)+0.6)));
         motorFrontRight.setPower((((y - x) - rx) / denominator)* ((0.5*(gamepad2.left_trigger-1)*(gamepad2.left_trigger-1)+0.2) * (0.4*(gamepad2.right_trigger)*(gamepad2.right_trigger)+0.6)));
         motorBackRight.setPower((((y + x) - rx) / denominator)* ((0.5*(gamepad2.left_trigger-1)*(gamepad2.left_trigger-1)+0.2) * (0.4*(gamepad2.right_trigger)*(gamepad2.right_trigger)+0.6)));
-
-
-
         // ((0.5*(gamepad2.left_trigger-1)*(gamepad2.left_trigger-1)+0.2) * (0.3*(gamepad2.right_trigger)*(gamepad2.right_trigger)+0.6))
         /*if (gamepad2.b){
             motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -194,12 +152,7 @@ public class finalTeleOp extends LinearOpMode {
             motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
          */
-
-
-
-
     }
-
     private void slideManual() {
         //slide
         if (gamepad2.left_bumper && ((slide1.getCurrentPosition() <= maxSlideEncoderTicks) && (slide2.getCurrentPosition() <= maxSlideEncoderTicks))) {
@@ -220,7 +173,6 @@ public class finalTeleOp extends LinearOpMode {
             slide2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
             slide1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         }
-
         /*if ((gamepad2.a) && (clawBoolean && timeSinceToggleClaw.milliseconds() > 300)) {
             claw.setPosition(.33);
             clawBoolean = false;
@@ -234,61 +186,42 @@ public class finalTeleOp extends LinearOpMode {
             clawOutput = "open";
         }
          */
-
-
     }
-
     private void slideAuto(){
-
         if (gamepad1.dpad_up) {
             // high junction
             targetPosition = 3950;
             isPressed = "dpad_up ";
-
-
         } else if (gamepad1.dpad_right || gamepad1.dpad_left) {
             //medium junction
             targetPosition = 2830;
             isPressed = "dpad_right";
-
-
         } else if (gamepad1.dpad_down) {
             //low junction
             targetPosition = 1750;
             isPressed = "dpad_down";
-
             //slide fix position and then drop to ensure getting hte cone on the junction
         } else if (gamepad1.back){
             targetPosition = 0;
         }
-
         else if (gamepad1.ps && (targetPosition >= 3930) && (targetPosition <= 3970)) {
             targetPosition = 3800;
             //activate = 1;
-
         }
         else if (gamepad1.ps && (targetPosition >= 2750) && (targetPosition <= 2900)) {
             targetPosition = 2730;
             //activate = 1;
-
         }
         else if (gamepad1.ps && (targetPosition >= 1700) && (targetPosition <= 1820)) {
             targetPosition = 1650;
-
             //activate = 1;
-
-
         }
-
-
-
         slide1.setTargetPosition(targetPosition);
         slide2.setTargetPosition(targetPosition);
         slide1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         slide2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         slide1.setVelocity(slideVelocity);
         slide2.setVelocity(slideVelocity);
-
         //so that claw runs after the fix position drop off
         /*if (activate == 1) {
             sleep(700);
@@ -297,31 +230,29 @@ public class finalTeleOp extends LinearOpMode {
             activate = 0;
         }
          */
-
     }
-
-   /* private void arm() {
-        //BOOLEAN
-        if (gamepad1.a && Override && timeSinceToggleArm.milliseconds() > 300){
-            Override = false;
-            timeSinceToggleArm.reset();
-        }else if (gamepad1.a && !Override && timeSinceToggleArm.milliseconds() > 300) {
-            Override = true;
-            timeSinceToggleArm.reset();
-        }if (gamepad1.dpad_up && Override && (armLimitSwitch.getState() == true)) {
-            armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            armMotor.setPower(0.35);
-        }else if (gamepad1.dpad_down && Override && (armMotor.getCurrentPosition() >= minArmEncoderTicks)){
-            armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            armMotor.setPower(-0.35);
-        }
-        else if (!Override) {
-            armMotorCurrentPosition = armMotor.getCurrentPosition();
-            Override = true;
-            /*armMotor.setTargetPosition(armMotorCurrentPosition);
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.15);
-    */
+    /* private void arm() {
+         //BOOLEAN
+         if (gamepad1.a && Override && timeSinceToggleArm.milliseconds() > 300){
+             Override = false;
+             timeSinceToggleArm.reset();
+         }else if (gamepad1.a && !Override && timeSinceToggleArm.milliseconds() > 300) {
+             Override = true;
+             timeSinceToggleArm.reset();
+         }if (gamepad1.dpad_up && Override && (armLimitSwitch.getState() == true)) {
+             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+             armMotor.setPower(0.35);
+         }else if (gamepad1.dpad_down && Override && (armMotor.getCurrentPosition() >= minArmEncoderTicks)){
+             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+             armMotor.setPower(-0.35);
+         }
+         else if (!Override) {
+             armMotorCurrentPosition = armMotor.getCurrentPosition();
+             Override = true;
+             /*armMotor.setTargetPosition(armMotorCurrentPosition);
+             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+             armMotor.setPower(0.15);
+     */
         /*else if (gamepad1.y && Override){
             armMotor.setTargetPosition(-400);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -338,8 +269,6 @@ public class finalTeleOp extends LinearOpMode {
         }
     }
     */
-
-
     private void claw(){
         if ((gamepad1.b || gamepad2.a) && (clawBoolean && timeSinceToggleClaw.milliseconds() > 300)) {
             claw.setPosition(.33);
@@ -353,24 +282,20 @@ public class finalTeleOp extends LinearOpMode {
             timeSinceToggleClaw.reset();
             clawOutput = "open";
         }
-
         else if (gamepad1.y && ((slide1.getCurrentPosition() > 200) && (slide2.getCurrentPosition() > 200))){
             // claw forward (approx 0 degrees)
             rotation.setPosition(0.138);
             rotationOutput = "0 degrees";
-
         }else if (gamepad1.x  && ((slide1.getCurrentPosition() > 200) && (slide2.getCurrentPosition() > 200))){
             // claw forward ( 90 degrees)
             rotation.setPosition(0.46);
             rotationOutput = "90 degrees";
-
         }else if (gamepad1.a  && ((slide1.getCurrentPosition() > 200) && (slide2.getCurrentPosition() > 200))){
             // claw forward ( 180 degrees)
             rotation.setPosition(0.78);
             rotationOutput = "180 degrees";
         }
     }
-
     private void limitSwitch(){
         if (slideLimitSwitch.getState() == false) {
             slide1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -389,5 +314,4 @@ public class finalTeleOp extends LinearOpMode {
             String limitSwitchOutput = "no";
         }
     }
-
 }
